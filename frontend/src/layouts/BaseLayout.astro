@@ -1,0 +1,147 @@
+---
+const { title } = Astro.props;
+import '../styles/reset.css';
+import '../styles/global.css';
+---
+
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | MusicBlog</title>
+  </head>
+  <body>
+    <header>
+      <h1>MusicBlog</h1>
+      <button class="hamburger" aria-label="Открыть меню">☰</button>
+      <nav class="nav-menu">
+        <a href="/blog">Блог</a>
+        <a href="/about">О нас</a>
+        <button id="theme-toggle" aria-label="Переключить тему">☀️</button>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <p>© 2025 MusicBlog. Все права защищены.</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+  }
+  h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+  }
+  .hamburger {
+    display: none;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #2c3e50;
+  }
+  .nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .nav-menu a {
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 1rem;
+  }
+  .nav-menu a:hover {
+    text-decoration: underline;
+  }
+  #theme-toggle {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  footer {
+    text-align: center;
+    padding: 1rem;
+    background: #ecf0f1;
+    color: #2c3e50;
+    font-size: 0.9rem;
+  }
+  body.dark {
+    background: #2c3e50;
+    color: #ecf0f1;
+  }
+  body.dark header {
+    background: #34495e;
+    border-bottom: 1px solid #2c3e50;
+  }
+  body.dark .hamburger {
+    color: #ecf0f1;
+  }
+  body.dark .nav-menu a {
+    color: #ecf0f1;
+  }
+  body.dark footer {
+    background: #34495e;
+    color: #ecf0f1;
+  }
+  @media (max-width: 768px) {
+    .hamburger {
+      display: block;
+    }
+    .nav-menu {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      right: 0;
+      background: #f5f5f5;
+      padding: 1rem;
+      border-bottom: 1px solid #ddd;
+    }
+    body.dark .nav-menu {
+      background: #34495e;
+      border-bottom: 1px solid #2c3e50;
+    }
+    .nav-menu.active {
+      display: flex;
+    }
+    .nav-menu a, .nav-menu button {
+      font-size: 1.2rem;
+      padding: 0.5rem;
+    }
+  }
+</style>
+
+<script>
+  const hamburger = document.querySelector('.hamburger');
+  const navMenu = document.querySelector('.nav-menu');
+  hamburger.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+    hamburger.textContent = navMenu.classList.contains('active') ? '✖' : '☰';
+  });
+
+  const themeToggle = document.querySelector('#theme-toggle');
+  const body = document.body;
+  themeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark');
+    themeToggle.textContent = body.classList.contains('dark') ? '🌙' : '☀️';
+    localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
+  });
+
+  if (localStorage.getItem('theme') === 'dark') {
+    body.classList.add('dark');
+    themeToggle.textContent = '🌙';
+  }
+</script>
