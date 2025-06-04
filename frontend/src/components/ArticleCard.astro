@@ -1,0 +1,54 @@
+---
+const { article, isLarge = false } = Astro.props;
+---
+
+<article class={isLarge ? 'large-card' : 'card'}>
+  <img src={`https://ominous-memory-4jw4v5jgxg5qc57p9-8000.app.github.dev${article.image}`} alt={article.title} />
+  <div>
+    <span>{new Date(article.created_at).toLocaleDateString()}</span>
+    <h3>{article.title}</h3>
+    <p>{article.desc}</p>
+    <div class="tags">
+      {article.tags.split(',').map(tag => <span>{tag.trim()}</span>)}
+    </div>
+  </div>
+</article>
+
+<style>
+  .card {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background: #fff;
+    border: 1px solid #ddd;
+  }
+  .large-card {
+    display: block;
+    padding: 2rem;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  .tags span {
+    background: #e67e22;
+    color: white;
+    padding: 0.2rem 0.5rem;
+    margin-right: 0.5rem;
+    border-radius: 3px;
+  }
+  body.dark .card, body.dark .large-card {
+    background: #34495e;
+    border-color: #2c3e50;
+    color: #ecf0f1;
+  }
+  body.dark .tags span {
+    background: #e67e22;
+    color: #fff;
+  }
+  @media (max-width: 768px) {
+    .card {
+      flex-direction: column;
+    }
+  }
+</style>

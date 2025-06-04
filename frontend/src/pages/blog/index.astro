@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+let articles = [];
+try {
+  const response = await fetch('https://ominous-memory-4jw4v5jgxg5qc57p9-8000.app.github.dev/api/articles/');
+  if (!response.ok) {
+    console.error('Failed to fetch articles:', response.status, response.statusText);
+  } else {
+    articles = await response.json();
+  }
+} catch (error) {
+  console.error('Fetch error:', error.message);
+}
+---
+
+<BaseLayout title="Блог">
+  <h2>Последние статьи</h2>
+  <section class="recent-posts">
+    {articles.length > 0 ? (
+      articles.slice(0, 3).map((article, index) => (
+        <ArticleCard article={article} isLarge={index === 0} />
+      ))
+    ) : (
+      <p>Нет статей для отображения.</p>
+    )}
+  </section>
+
+  <h2>Все статьи</h2>
+  <section class="all-posts">
+    {articles.length > 0 ? (
+      articles.map((article) => (
+        <ArticleCard article={article} />
+      ))
+    ) : (
+      <p>Нет статей для отображения.</p>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .recent-posts {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1rem;
+  }
+  .all-posts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  @media (max-width: 768px) {
+    .recent-posts,
+    .all-posts {
+      grid-template-columns: 1fr;
+    }
+  }
+  p {
+    text-align: center;
+    color: #2c3e50;
+  }
+</style>
